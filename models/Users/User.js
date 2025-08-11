@@ -47,7 +47,7 @@ const UserSchema =new mongoose.Schema({
         type:String,
        },
        notificationType:{
-        email: {type: String, required: true},
+        email: {type: String},
         //! in future we can also improve email via otp ,sms ,call
        },
         gender:{

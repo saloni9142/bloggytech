@@ -1,6 +1,7 @@
 const express= require("express");
 const dotenv= require("dotenv");
 const usersRouter = require("./routes/users/usersRouter");
+const connectDB = require("./config/database");
 
 
 // create an express app
@@ -9,6 +10,13 @@ const app = express();
 
 //! load the environment variable
 dotenv.config();
+// ! establish connecction to mongodb
+connectDB();
+
+// ! set up the midleware
+
+app.use(express.json());
+ 
 
 //? setup the router
 app.use("/", usersRouter); // as a middleware
