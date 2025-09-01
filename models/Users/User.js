@@ -1,4 +1,6 @@
 const mongoose= require("mongoose");
+const crypto= require("crypto");
+const { log } = require("console");
 const UserSchema =new mongoose.Schema({
     username:{
         type: String,
@@ -75,12 +77,49 @@ const UserSchema =new mongoose.Schema({
 
 },
 {
-    timestamps:true  //! isse add krne se  hmre column me do property khud se add ho jaigi create app and upadate app
+    timestamps:true,  //! isse add krne se  hmre column me do property khud se add ho jaigi create app and upadate app
+     toJSON:{
+        virtuals:true,
+    },
+    toObject:{
+        virtuals:true,
+    },
 }
 
 );
 
-// ! convert schema to model 
+UserSchema.methods.generatePasswordResetToken = function(){
+    // ! generate token
+    const resetToken= crypto.randomBytes(20).toString("hex");
+    this.passwordResetToken=crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+    console.log("reset token", resetToken);
+    console.log("hashed token", this.passwordResetToken);
+    // ! set the expire time to 10 min
+    this.passwordResetExpires= Date.now() +10*60*1000;
+    
+    
+    return resetToken;
+}
 
+UserSchema.methods.generateAccountVerificationToken= function(){
+    // ! generate token
+    const verificationToken= crypto.randomBytes(20).toString("hex");
+    this.accountVerificationToken=crypto
+    .createHash("sha256")
+    .update(verificationToken)
+    .digest("hex");
+    console.log("reset token", verificationToken);
+    console.log("hashed token", this.accountVerificationToken);
+    // ! set the expire time to 10 min
+    this.accountVerificationExpires= Date.now() +10*60*1000;
+    
+    
+    return verificationToken;
+};
+
+// ! convert schema to model 
 const User = mongoose.model("User", UserSchema);
 module.exports= User;

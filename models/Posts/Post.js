@@ -6,7 +6,7 @@ const postSchema =new mongoose.Schema({
     },
     image: {
         type: String,
-       default:"",  
+      required:true, 
         },
 
         claps:{
@@ -63,12 +63,18 @@ const postSchema =new mongoose.Schema({
         
 },
 {
-    timestamps:true  //! isse add krne se  hmre column me do property khud se add ho jaigi create app and upadate app
+    timestamps:true , //! isse add krne se  hmre column me do property khud se add ho jaigi create app and upadate app
+    toJSON:{
+        virtuals:true,
+    },
+    toObject:{
+        virtuals:true,
+    },
 }
 
 );
 
 // ! convert schema to model 
 
-const User = mongoose.model("Post", postSchema);
+const Post = mongoose.model("Post", postSchema);
 module.exports= Post;

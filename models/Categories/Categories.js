@@ -15,12 +15,12 @@ const categorySchema =new mongoose.Schema({
             default:0,
 
         },
-        post :{
+        posts :[{
              type: mongoose.Schema.Types.ObjectId,
             ref: "Post",
 
 
-        },
+        }],
 
 
    
@@ -28,12 +28,18 @@ const categorySchema =new mongoose.Schema({
         
 },
 {
-    timestamps:true  //! isse add krne se  hmre column me do property khud se add ho jaigi create app and upadate app
+    timestamps:true , //! isse add krne se  hmre column me do property khud se add ho jaigi create app and upadate app
+     toJSON:{
+        virtuals:true,
+    },
+    toObject:{
+        virtuals:true,
+    },
 }
 
 );
 
 // ! convert schema to model 
 
-const User = mongoose.model("Category", categorySchema);
+const Category = mongoose.model("Category", categorySchema);
 module.exports= Category ;
