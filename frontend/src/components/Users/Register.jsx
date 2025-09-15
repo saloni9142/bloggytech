@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector} from "react-redux";
 import { registerAction } from "../../redux/slices/users/userslices";
 import { useEffect } from "react";
+import ErrorMsg from "../Alert/ErrorMsg";
+import SuccessMsg from "../Alert/SuccessMsg";
+import LoadingComponents from "../Alert/LoadingComponents";
 
 const Register = () => {
 	const dispatch= useDispatch();
@@ -39,7 +42,7 @@ const Register = () => {
 	};
 	//store data
 
-  const {user} = useSelector((state) => state.users);
+  const {user, error, loading, success} = useSelector((state) => state.users);
   // redirect 
 	useEffect(()=>{
 	  if(user?.status === "success"){
@@ -58,6 +61,8 @@ const Register = () => {
 				<h2 className="mb-4 text-2xl md:text-3xl text-coolGray-900 font-bold text-center">
 					Join our community
 				</h2>
+				{error && <ErrorMsg message={error.message}/>}
+				{success && <SuccessMsg message="User registered successfully"/>}
 				<h3 className="mb-7 text-base md:text-lg text-coolGray-500 font-medium text-center">
 					Lorem ipsum dolor sit amet, consectetur adipisng.
 				</h3>
@@ -94,12 +99,13 @@ const Register = () => {
 						name="password"
 					/>
 				</label>
-				<button
+				{loading ? (<LoadingComponents />) : (<button
 					className="mb-4 inline-block py-3 px-7 w-full leading-6 text-green-50 font-medium text-center bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-md"
 					type="submit"
 				>
 					Get Started
-				</button>
+				</button>)}
+				
 				{/* <div className="flex items-center mb-4 w-full text-xs text-coolGray-400">
           <div className="flex-1 h-px bg-coolGray-100" />
           <span className="px-2 font-medium">OR</span>

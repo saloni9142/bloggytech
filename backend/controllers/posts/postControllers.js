@@ -99,7 +99,7 @@ resp.send("done");
 
 
   //@desc get single posts
-  //@route GET /api/v1/posts
+  //@route GET /api/v1/posts/:id
   //@access public
 
   exports.getPost = asyncHandler(async(req, resp)=>{
@@ -120,9 +120,25 @@ resp.send("done");
       resp.json({
       status: "success",
       message: " No Post avaiable for given id",
-      post,
+      // post,
       });
     }
+  });
+
+
+  //@desc get 4  posts
+  //@route GET /api/v1/posts
+  //@access public
+
+  exports.getPublicPost = asyncHandler(async(req, resp)=>{
+    
+
+    const posts = await Post.find({}).sort({createdAt:-1}).limit(4).populate("category");
+   resp.status(201).json({
+    status:"success",
+    message:"4 posts successfully created",
+    posts,
+   })
   });
 
   //@desc delete posts
@@ -223,7 +239,7 @@ const updatedPost= await Post.findByIdAndUpdate(postId, post, {new:true, runVali
      
 
     });
-  });
+});
 
   //@desc dislike a posts
   //@route PUT /api/v1/posts/dislike/:postId
@@ -335,8 +351,5 @@ const updatedPost= await Post.findByIdAndUpdate(postId, post, {new:true, runVali
       message :" posts scheduled successfully",
       post,
        });
-
-
-
-  });
+});
 

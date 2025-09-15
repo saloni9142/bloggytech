@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice}  from "@reduxjs/toolkit";
 import axios from "axios";
+import { resetErrorAction, resetSuccessAction } from "../globalSlice/globalSlice";
 const INITIAL_STATE ={
     loading: false,
     error : null,
@@ -56,7 +57,7 @@ export const registerAction = createAsyncThunk("users/register",
     export const logoutAction = createAsyncThunk("users/logout",async()=>{
 localStorage.removeItem("userinfo");
 return true;
-    })
+    });
 
     const userSlice = createSlice({
         name: "users",
@@ -101,8 +102,16 @@ builder.addCase(registerAction.rejected, (state,action)=>{
     state.error=action.payload;
    
 });
-
-},
+// ! reset error action
+builder.addCase(resetErrorAction,(state)=>{
+    state.error =null;
  });
+
+ //! // ! reset success action
+builder.addCase(resetSuccessAction,(state)=>{
+    state.success =null;
+ });
+},
+    });
  const usersReducer= userSlice.reducer;
  export default usersReducer;
