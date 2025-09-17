@@ -107,8 +107,7 @@ resp.send("done");
 
     const postId= req.params.id
     // fetch the post corresponding to this id
-
-    const post = await Post.findById(postId);
+   const post = await Post.findById(postId).populate("author").populate("category");
     if(post){
     resp.json({
       status: "success",

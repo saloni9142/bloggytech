@@ -11,7 +11,7 @@ import ErrorMsg from "./Alert/ErrorMsg";
 const AddPost = () => {
 const dispatch = useDispatch();
 // ! Error State
-const [errors, setError] = useState(null);
+const [errors, setErrors] = useState(null);
 const {post, error, loading,success} = useSelector((state) => state?.posts);
 const {categories} = useSelector((state) => state.categories);
 // console.log("categories", categories);
@@ -43,9 +43,14 @@ const options = categories?.allCategories?.map((category)=>{
  if(!data.category){
       error.category = "Category is required";
 }
-return errors;
-
-  }
+return error;
+};
+// handle blur event
+const handlerBlur=(e)=>{
+  const formErrors = validateForm(formData);
+  const {name} = e.target;
+  setErrors({...errors,[name]:formErrors[name]});
+};
 
   // dummy value
   // });const options = [
@@ -73,8 +78,13 @@ const handleSelectChange = (selectedOption) => {
 
   const handleSubmit = (e) => {
     console.log(formData);
-    dispatch(addPostAction(formData));
-    e.preventDefault();
+     e.preventDefault();
+    const formErrors = validateForm(formData);
+    setErrors(formErrors);
+
+    if (Object.keys(formErrors).length === 0) {
+      dispatch(addPostAction(formData));
+     
 
     setFormData({
       title: "",
@@ -82,6 +92,8 @@ const handleSelectChange = (selectedOption) => {
       category: null,
       content: "",
     });
+    }
+    
   };
 
   return (
@@ -105,25 +117,40 @@ const handleSelectChange = (selectedOption) => {
               name="title"
               value={formData.title}
               onChange={handleChange}
+              onBlur ={handlerBlur}
+
             />
             {/* error here */}
+            {errors?.title && <p className="text-red-500">{errors?.title}</p>}
           </label>
           
+          <label className="mb-4 flex flex-col w-full">
+            <span className="mb-1 text-coolGray-800 font-medium">Image</span>
             <input
-              className="py-3 px-3 leading-5 w-full text-coolGray-400 font-normal border border-coolGray-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-lg shadow-sm"
+             className="py-3 px-3 leading-5 w-full text-coolGray-400 font-normal border border-coolGray-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-lg shadow-sm"
               type="file"
               name="image"
               onChange={handleFileChange}
+              onBlur ={handlerBlur}
             />
-           
-          
-         
+              {/* error here */}
+            {errors?.image && <p className="text-red-500">{errors?.image}</p>}
+          </label>
+
           {/* category here */}
           <label className="mb-4 flex flex-col w-full">
             <span className="mb-1 text-coolGray-800 font-medium">Category</span>
-            <Select options={options} name="category" onChange={handleSelectChange} />
+            <Select 
+            options={options} 
+            name="category" 
+            onChange={handleSelectChange} 
+            onBlur ={handlerBlur}
+            />
           </label>
             {/* error here */}
+            {errors?.category && <p className="text-red-500">{errors?.category}</p>}
+
+          {/* content here */}
              <label className="mb-4 flex flex-col w-full">
           <span className="mb-1 text-coolGray-800 font-medium">Content</span>
           <textarea
@@ -132,7 +159,10 @@ const handleSelectChange = (selectedOption) => {
             name="content"
               value={formData.content}
               onChange={handleChange}
+               onBlur ={handlerBlur}
             />
+            {/* error here */}
+            {errors?.content && <p className="text-red-500">{errors?.content}</p>}
             </label>
           
           {/* button */}

@@ -8,6 +8,26 @@ const INITIAL_STATE ={
     posts: [],
     post: null,
     };
+
+     // fetch single Post action 
+export const getPostAction = createAsyncThunk("posts/get-post", 
+    async(postId,{rejectWithValue,getState,dispatch}) =>{
+        // make request
+        try{
+            console.log("started comm");
+            const {data}= await axios.get(
+                `http://localhost:3000/api/v1/posts/${postId}`
+               
+            );
+           
+            return data;
+        }catch (error){
+            return rejectWithValue(error?.response?.data);
+
+        }
+    });
+
+    
     // fetch Public Post action 
 export const fetchPublicPostAction = createAsyncThunk("posts/fetch-public-post", 
     async(payload,{rejectWithValue,getState,dispatch}) =>{
@@ -82,6 +102,25 @@ builder.addCase(fetchPublicPostAction.rejected, (state,action)=>{
    
 });
 
+ // get single  post
+            builder.addCase(getPostAction.pending, (state,action)=>{
+                console.log(" get postpending run");
+                state.loading =true;
+});
+builder.addCase(getPostAction.fulfilled, (state,action)=>{
+    console.log("fulfilled run")
+    state.loading = false;
+    state.success = true,
+    state.error=null;
+    state.post= action.payload;
+});
+builder.addCase(getPostAction.rejected, (state,action)=>{
+    console.log("rejected");
+    state.loading = false;
+    state.success = false;
+    state.error=action.payload;
+   
+});
 // create post
             builder.addCase(addPostAction.pending, (state,action)=>{
                 console.log(" add post pending");

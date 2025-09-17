@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./components/Alert/AuthRoute/ProtectedRoute";
 import PublicPosts from "./components/Posts/PublicPosts";
 import AddPost from "./components/AddPost";
+import PostDetails from "./components/Posts/PostDetails";
 export default function App(){
   const{userAuth} = useSelector((state)=>state.users);
   const isLoggedIn = userAuth?.userInfo?.token;  
@@ -30,6 +31,13 @@ export default function App(){
         <Route path ="/add-post" element ={
         <ProtectedRoute>
           <AddPost/>
+        </ProtectedRoute>
+       }
+       />
+
+        <Route path ="/posts/:postId" element ={
+        <ProtectedRoute>
+          <PostDetails/>
         </ProtectedRoute>
        }
        />

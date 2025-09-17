@@ -1,16 +1,6 @@
 import React, { useEffect } from "react";
-import {useDispatch, useSelector } from "react-redux";
-import { fetchPublicPostAction } from "../../redux/slices/posts/postSlice";
-import LoadingComponent from  "../Alert/LoadingComponents";
-import { Link } from "react-router-dom";
-const PublicPosts = () => {
-  const dispatch = useDispatch();
-  const { posts, error, success, loading } = useSelector((state) => state?.posts);
 
-  useEffect(() => {
-    dispatch(fetchPublicPostAction());
-  }, [dispatch]);
-
+const PublicPostsTemplate = () => {
   return (
     <>
       <div>
@@ -35,11 +25,8 @@ const PublicPosts = () => {
             </div>
 
             <div className="flex flex-wrap -mx-4 mb-12 md:mb-20">
-              {/* loop */} 
-              {loading ? (<LoadingComponent />) : error? (<h3 className="text-red-500 ">{error?.message}</h3> 
-               ) :posts?.posts?.length <=0 ? (<h3>No post found</h3>): 
-             ( posts?.posts?.map((post)=>{
-                return (<div key={post._id}  className="w-full md:w-1/2 px-4 mb-8">
+              {/* loop */}
+              <div className="w-full md:w-1/2 px-4 mb-8">
                 <a className="block mb-6 overflow-hidden rounded-md" href="#">
                   <img
                     className="w-full"
@@ -51,24 +38,26 @@ const PublicPosts = () => {
                     className="inline-block py-1 px-3 text-xs leading-5 text-green-500 hover:text-green-600 font-medium uppercase bg-green-100 hover:bg-green-200 rounded-full shadow-sm"
                     href="#"
                   >
-                   {post?.category?.name}
+                    some category
                   </a>
                 </div>
                 <p className="mb-2 text-coolGray-500 font-medium">
-                {post?.createdAt}
+                  John Doe • 19 Jan 2022
                 </p>
                 <a
                   className="inline-block mb-4 text-2xl md:text-3xl leading-tight text-coolGray-800 hover:text-coolGray-900 font-bold hover:underline"
                   href="#"
                 >
-                  {post?.title}
+                  some title
                 </a>
                 <p className="mb-4 text-coolGray-500">
-                  {post?.content}
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                  euismod, nisl nec tincidunt luctus, nunc sem condimentum nunc,
+                  nec lacinia nisl lorem nec arcu. Sed/
                 </p>
-                <Link
+                <a
                   className="inline-flex items-center text-base md:text-lg text-green-500 hover:text-green-600 font-semibold"
-                  to={`/posts/${post?._id}`}
+                  href="#"
                 >
                   <span className="mr-3">Read Post</span>
                   <svg
@@ -83,11 +72,8 @@ const PublicPosts = () => {
                       fill="currentColor"
                     />
                   </svg>
-                </Link>
-              </div>)
-
-              }) )}
-              
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -96,4 +82,4 @@ const PublicPosts = () => {
   );
 };
 
-export default PublicPosts;
+export default PublicPostsTemplate;
