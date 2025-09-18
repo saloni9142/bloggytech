@@ -148,6 +148,13 @@ resp.send("done");
     // get the id
     const postId=req.params.id;
 
+    // fetch the post object from db
+    const post = await Post.findById(postId);
+    // check whether the currnt user is the author
+    const isAuthor = req.userAuth?.toString()=== post?.author?._id.toString();
+     if(!isAuthor){
+      
+     }
     // delete the posts from the db
 const deletePost= await Post.findByIdAndDelete(postId)
 

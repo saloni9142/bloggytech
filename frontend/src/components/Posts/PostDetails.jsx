@@ -5,6 +5,7 @@ import { getPostAction } from "../../redux/slices/posts/postSlice";
 import LoadingComponent from  "../Alert/LoadingComponents";
 import ErrorMsg from "../Alert/ErrorMsg";
 import PostStats from "./PostStats";
+import calculateReadingTime from "../../utils/calculateReadingTime";
 
 const PostDetails = () => {
   const dispatch = useDispatch();
@@ -85,7 +86,7 @@ useEffect(()=>{
         dislikes={post?.post?.dislikes.length}
         comments={post?.post?.comments.length}
         createdAt={post?.post?.createdAt}
-        readinTime ={calculateReadingTime(post?.post?.content)}
+        readingTime ={calculateReadingTime(post?.post?.content)}
            />
 
        
