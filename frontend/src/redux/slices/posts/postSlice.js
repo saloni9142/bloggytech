@@ -104,6 +104,32 @@ export const addPostAction = createAsyncThunk("posts/create",
 
         }
     });
+
+     // delete post action
+export const deletePostAction = createAsyncThunk("posts/delete-post", 
+    async(postId,{rejectWithValue,getState,dispatch}) =>{
+        // make request
+        try{
+
+           
+            const token = getState()?.users?.userAuth?.userInfo?.token;
+            const config ={
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                }
+            }
+            const {data}= await axios.delete(
+                `http://localhost:3000/api/v1/posts/${postId}`,
+              
+              config
+            );
+            
+            return data;
+        }catch (error){
+            return rejectWithValue(error?.response?.data);
+
+        }
+    });
     // !Posts Slice
 
      const postSlice = createSlice({
@@ -137,7 +163,7 @@ builder.addCase(fetchPublicPostAction.rejected, (state,action)=>{
 builder.addCase(fetchPrivatePostAction.fulfilled, (state,action)=>{
     console.log("fulfilled run")
     state.loading = false;
-    state.success = true,
+    // state.success = true,
     state.error=null;
     state.posts= action.payload;
 });
@@ -182,6 +208,25 @@ builder.addCase(addPostAction.fulfilled, (state,action)=>{
 });
 builder.addCase(addPostAction.rejected, (state,action)=>{
     console.log(" add post rejected run");
+    state.loading = false;
+    state.success = false;
+    state.error=action.payload;
+   
+});
+// delete post
+            builder.addCase(deletePostAction.pending, (state,action)=>{
+                console.log(" delete post pending");
+                state.loading =true;
+});
+builder.addCase(deletePostAction.fulfilled, (state,action)=>{
+    console.log("delete post fulfilled run")
+    state.loading = false;
+    state.success = true,
+    state.error=null;
+   
+});
+builder.addCase(deletePostAction.rejected, (state,action)=>{
+    console.log(" delete post rejected run");
     state.loading = false;
     state.success = false;
     state.error=action.payload;

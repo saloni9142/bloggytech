@@ -1,25 +1,39 @@
 import React, { useEffect } from "react";
 import {useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { getPostAction } from "../../redux/slices/posts/postSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { deletePostAction, getPostAction } from "../../redux/slices/posts/postSlice";
 import LoadingComponent from  "../Alert/LoadingComponents";
 import ErrorMsg from "../Alert/ErrorMsg";
 import PostStats from "./PostStats";
 import calculateReadingTime from "../../utils/calculateReadingTime";
 
 const PostDetails = () => {
+  // !navigatee
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {post, error,success,loading} = useSelector((state) =>
      state?.posts
-);
+  );
+const {userAuth}=useSelector((state)=>state?.users)
 const {postId} = useParams();
 
 // !dispatch
 useEffect(()=>{
   dispatch(getPostAction(postId));
 }, [dispatch, postId]);
+// !get the craetor id of the post
+const creator = post?.post?.author?._id?.toString();
+// !get the login of the current user
+const loggedInUser = userAuth?.userInfo?._id?.toString();
+// ! check whether thr loogin in unser i sthe author or not
+const isCreator = creator===loggedInUser;
 
-
+const deletePostHandler =()=>{
+  dispatch(deletePostAction(postId));
+  if(success){
+    navigate("/posts");
+  }
+};
   return (
     <>
     {loading? <LoadingComponent/>: error? <ErrorMsg message={error?.message}/>:<section
@@ -39,12 +53,12 @@ useEffect(()=>{
             <p className="inline-block font-medium text-green-500">oe {post?.post?.author?.username}</p>
             <span className="mx-1 text-green-500">•</span>
             <p className="inline-block font-medium text-green-500">
-              19 Jan 2022
+              19 Jan 2022 19 Jan 
             </p>
           </div>
-          <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tighter md:text-5xl text-darkCoolGray-900">
+          {/* <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tighter md:text-5xl text-darkCoolGray-900">
             {post?.post?.title}
-          </h2>
+          </h2> */}
           <p className="mb-10 text-lg font-medium md:text-xl text-coolGray-500">
           {post?.post?.content}
           </p>
@@ -58,11 +72,11 @@ useEffect(()=>{
             </div>
             <div className="w-auto px-2">
               <h4 className="text-base font-bold md:text-lg text-coolGray-800">
-                John Doe
+                {post?.post?.author?.username}
               </h4>
-              <p className="text-base md:text-lg text-coolGray-500">
+              {/* <p className="text-base md:text-lg text-coolGray-500">
                 12 October 2021
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -96,7 +110,9 @@ useEffect(()=>{
           <p className="pb-10 mb-8 text-lg font-medium border-b md:text-xl text-coolGray-500 border-coolGray-100">
            {post?.post?.content}
           </p>
+           {isCreator && (
           <div className="flex justify-end mb-4">
+            {/* {delete and updates icons} */}
             <button className="p-2 mr-2 text-gray-500 hover:text-gray-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +129,7 @@ useEffect(()=>{
                 />
               </svg>
             </button>
-            <button className="p-2 text-gray-500 hover:text-gray-700">
+            <button onClick={deletePostHandler} className="p-2 text-gray-500 hover:text-gray-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -130,6 +146,9 @@ useEffect(()=>{
               </svg>
             </button>
           </div>
+           )}
+            
+            
           <h3 className="mb-4 text-2xl font-semibold md:text-3xl text-coolGray-800">
             Add a comment
           </h3>
@@ -141,6 +160,7 @@ useEffect(()=>{
     </>
     
   );
+
 };
 
 export default PostDetails;
