@@ -9,6 +9,7 @@ const PostStats = ({
 	totalComments,
 	readingTime,
 	createdAt,
+	postId,
 }) => {
 	const timeSinceCreated = moment(createdAt).fromNow();
 

@@ -195,13 +195,23 @@ const deletePost= await Post.findByIdAndDelete(postId)
   exports.updatePost = asyncHandler(async(req, resp)=>{
     // get the id
     const postId=req.params.id;
+    const postFound= await Post.findById(postId);
+    if(!postFound){
+      throw Error("Post not found!");
+    }
 
     // get the post object from req
-    const post= req.body;
+    const {title,category,content}= req.body;
 
     // update this posts in the db
+const updatedPost= await Post.findByIdAndUpdate(postId, {
+    image: req?.file?.path? req?.file?.path: postFound?.image,
+    title: title? title: postFound.title,
+    category: category? category: postFound.category,
+    content: content? content : postFound.content,
 
-const updatedPost= await Post.findByIdAndUpdate(postId, post, {new:true, runValidators:true});
+}, 
+{new:true, runValidators:true});
 
   //  send the response
     resp.json({

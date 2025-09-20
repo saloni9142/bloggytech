@@ -130,6 +130,66 @@ export const deletePostAction = createAsyncThunk("posts/delete-post",
 
         }
     });
+
+     // update post action
+export const updatePostAction = createAsyncThunk("posts/update", 
+    async(payload,{rejectWithValue,getState,dispatch}) =>{
+        // make request
+        try{
+
+            // convert payload to form data
+            const formData = new FormData();
+            formData.append("title", payload?.title);
+            formData.append("file", payload?.image);
+            formData.append("categoryId", payload?.category);
+            formData.append("content", payload?.content);
+            const token = getState()?.users?.userAuth?.userInfo?.token;
+            const config ={
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                }
+            }
+            const {data}= await axios.put(
+                `http://localhost:3000/api/v1/posts/${payload?.postId}`,
+              formData,
+              config
+            );
+            
+            return data;
+        }catch (error){
+            return rejectWithValue(error?.response?.data);
+
+        }
+    });
+
+     // Like Post  
+export const likePostAction = createAsyncThunk("posts/like", 
+    async(postId,{rejectWithValue,getState,dispatch}) =>{
+        // make request
+        try{
+            console.log("started comm");
+             const token = getState()?.users?.userAuth?.userInfo?.token;
+            const config ={
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const {data}= await axios.out(
+                `http://localhost:3000/api/v1/posts/like/${postId}`,
+                {},
+                config
+               
+            );
+           
+            return data;
+        }catch (error){
+            return rejectWithValue(error?.response?.data);
+
+        }
+    });
+
+    
+    
     // !Posts Slice
 
      const postSlice = createSlice({
@@ -144,7 +204,7 @@ export const deletePostAction = createAsyncThunk("posts/delete-post",
 builder.addCase(fetchPublicPostAction.fulfilled, (state,action)=>{
     console.log("fulfilled run")
     state.loading = false;
-    state.success = true,
+    // state.success = true,
     state.error=null;
     state.posts= action.payload;
 });
@@ -227,6 +287,45 @@ builder.addCase(deletePostAction.fulfilled, (state,action)=>{
 });
 builder.addCase(deletePostAction.rejected, (state,action)=>{
     console.log(" delete post rejected run");
+    state.loading = false;
+    state.success = false;
+    state.error=action.payload;
+   
+});
+
+//  update post
+            builder.addCase(updatePostAction.pending, (state,action)=>{
+                console.log(" update post pending");
+                state.loading =true;
+});
+builder.addCase(updatePostAction.fulfilled, (state,action)=>{
+    console.log("update post fulfilled run")
+    state.loading = false;
+    state.success = true,
+    state.error=null;
+    state.post= action.payload;
+});
+builder.addCase(updatePostAction.rejected, (state,action)=>{
+    console.log(" update post rejected run");
+    state.loading = false;
+    state.error=action.payload;
+   
+});
+
+ //like post
+            builder.addCase(likePostAction.pending, (state,action)=>{
+                console.log("  like pending run");
+                state.loading =true;
+});
+builder.addCase(likePostAction.fulfilled, (state,action)=>{
+    console.log("fulfilled run")
+    state.loading = false;
+    // state.success = true,
+    state.error=null;
+    state.posts= action.payload;
+});
+builder.addCase(likePostAction.rejected, (state,action)=>{
+    console.log("rejected");
     state.loading = false;
     state.success = false;
     state.error=action.payload;

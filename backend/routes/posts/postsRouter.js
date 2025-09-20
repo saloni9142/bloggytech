@@ -21,7 +21,7 @@ postsRouter.get("/public",  getPublicPost);
 postsRouter.get("/:id",  getPost);
 
 // ?delete POST route
-postsRouter.delete("/:id", isLoggedIn,  deletePost);
+postsRouter.delete("/:id", isLoggedIn, upload.single("file"),deletePost);
 
 // ? update POST route
 postsRouter.put("/:id", isLoggedIn,  updatePost);
