@@ -174,8 +174,60 @@ export const likePostAction = createAsyncThunk("posts/like",
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const {data}= await axios.out(
+            const {data}= await axios.put(
                 `http://localhost:3000/api/v1/posts/like/${postId}`,
+                {},
+                config
+               
+            );
+           
+            return data;
+        }catch (error){
+            return rejectWithValue(error?.response?.data);
+
+        }
+    });
+
+     // disLike Post  
+export const dislikePostAction = createAsyncThunk("posts/dislike", 
+    async(postId,{rejectWithValue,getState,dispatch}) =>{
+        // make request
+        try{
+            console.log("started comm");
+             const token = getState()?.users?.userAuth?.userInfo?.token;
+            const config ={
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const {data}= await axios.put(
+                `http://localhost:3000/api/v1/posts/dislike/${postId}`,
+                {},
+                config
+               
+            );
+           
+            return data;
+        }catch (error){
+            return rejectWithValue(error?.response?.data);
+
+        }
+    });
+
+        //clap Post  
+export const clapPostAction = createAsyncThunk("posts/clap", 
+    async(postId,{rejectWithValue,getState,dispatch}) =>{
+        // make request
+        try{
+            console.log("started comm");
+             const token = getState()?.users?.userAuth?.userInfo?.token;
+            const config ={
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const {data}= await axios.put(
+                `http://localhost:3000/api/v1/posts/claps/${postId}`,
                 {},
                 config
                
@@ -329,6 +381,43 @@ builder.addCase(likePostAction.rejected, (state,action)=>{
     state.loading = false;
     state.success = false;
     state.error=action.payload;
+   
+});
+
+//dislike post
+            builder.addCase(dislikePostAction.pending, (state,action)=>{
+                console.log("  dislike pending run");
+                state.loading =true;
+});
+builder.addCase(dislikePostAction.fulfilled, (state,action)=>{
+    console.log("fulfilled run")
+    state.loading = false;
+    state.error=null;
+    state.posts= action.payload;
+});
+builder.addCase(dislikePostAction.rejected, (state,action)=>{
+    console.log("rejected");
+    state.loading = false;
+   
+    state.error=action.payload;
+   
+});
+
+//clap post
+            builder.addCase(clapPostAction.pending, (state,action)=>{
+                console.log("  clap pending run");
+                state.loading =true;
+});
+builder.addCase(clapPostAction.fulfilled, (state,action)=>{
+    console.log("fulfilled run")
+    state.loading = false;
+    state.error=null;
+    state.posts= action.payload;
+});
+builder.addCase(clapPostAction.rejected, (state,action)=>{
+    console.log("rejected");
+    state.loading = false;
+   state.error=action.payload;
    
 });
 

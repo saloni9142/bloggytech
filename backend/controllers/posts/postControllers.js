@@ -246,12 +246,13 @@ const updatedPost= await Post.findByIdAndUpdate(postId, {
 
     );
     // resvae the post
-    await post.save();
+  const updatedPost=  await post.save();
 
      //  send the response
     resp.json({
       status: "success",
       message :" posts liked successfully",
+      post: updatedPost,
       
      
 
@@ -282,12 +283,13 @@ const updatedPost= await Post.findByIdAndUpdate(postId, {
 
     );
     // resave the post
-    await post.save();
+ const updatedPost=   await post.save();
 
      //  send the response
     resp.json({
       status: "success",
       message :" posts disliked successfully",
+      post :updatedPost,
       
      
 

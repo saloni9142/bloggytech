@@ -20,7 +20,8 @@ const {postId} = useParams();
 // !dispatch
 useEffect(()=>{
   dispatch(getPostAction(postId));
-}, [dispatch, postId]);
+ },[dispatch,postId, post?.post?.likes.length, post?.post?.dislikes.length]);
+
 // !get the craetor id of the post
 const creator = post?.post?.author?._id?.toString();
 // !get the login of the current user
@@ -36,7 +37,7 @@ const deletePostHandler =()=>{
 };
   return (
     <>
-    {loading? <LoadingComponent/>: error? <ErrorMsg message={error?.message}/>:<section
+   { error? <ErrorMsg message={error?.message}/>:<section
       className="py-16 bg-white md:py-24"
       style={{
         backgroundImage: 'url("flex-ui-assets/elements/pattern-white.svg")',
@@ -102,6 +103,7 @@ const deletePostHandler =()=>{
         createdAt={post?.post?.createdAt}
         readingTime ={calculateReadingTime(post?.post?.content)}
         postId={post?.post?._id}
+        claps={post?.post?.claps}
            />
 
        
