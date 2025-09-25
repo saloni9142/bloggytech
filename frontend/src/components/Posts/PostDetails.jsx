@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import {useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { deletePostAction, getPostAction } from "../../redux/slices/posts/postSlice";
+import { deletePostAction, getPostAction, postViewCountAction } from "../../redux/slices/posts/postSlice";
 import LoadingComponent from  "../Alert/LoadingComponents";
 import ErrorMsg from "../Alert/ErrorMsg";
 import PostStats from "./PostStats";
 import calculateReadingTime from "../../utils/calculateReadingTime";
+import AddCommentTemp from "../Comments/AddComment";
+import AddComment from "../Comments/AddComment";
 
 const PostDetails = () => {
   // !navigatee
@@ -21,6 +23,11 @@ const {postId} = useParams();
 useEffect(()=>{
   dispatch(getPostAction(postId));
  },[dispatch,postId, post?.post?.likes.length, post?.post?.dislikes.length]);
+
+ useEffect(()=>{
+  dispatch(postViewCountAction(postId));
+ },[dispatch]);
+
 
 // !get the craetor id of the post
 const creator = post?.post?.author?._id?.toString();
@@ -96,7 +103,8 @@ const deletePostHandler =()=>{
           height: "100%",
         }}
       >
-        <PostStats views ={post?.post?.views}
+        <PostStats
+         views ={post?.post?.postviews}
         likes ={post?.post?.likes.length}
         dislikes={post?.post?.dislikes.length}
         comments={post?.post?.comments.length}
@@ -159,6 +167,8 @@ const deletePostHandler =()=>{
           </h3>
 
           {/* Comment form */}
+          <AddComment postId={postId} comments={post?.post?.comments}/>
+
         </div>
       </div>
     </section>}

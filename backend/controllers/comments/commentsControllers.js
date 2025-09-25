@@ -4,7 +4,7 @@ const Comment = require("../../models/Comments/Comment");
 
 
 //@desc create new comments
-  //@route POST /api/v1/comments/:postid
+  //@route POST /api/v1/comments/:postId
   //@access private
 exports.createComment = asyncHandler(async (req, resp)=>{
     // get the payload

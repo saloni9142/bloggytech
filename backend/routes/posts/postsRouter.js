@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const storage=require("../../utils/fileUpload");
-const {createPost,getAllPosts,getPost, updatePost,  deletePost, likePost, dislikesPost, clapPost, schedulePost, getPublicPost} =require("../../controllers/posts/postControllers");
+const {createPost,getAllPosts,getPost, updatePost,  deletePost, likePost, dislikesPost, clapPost, schedulePost, getPublicPost, postViewCount} =require("../../controllers/posts/postControllers");
 const isLoggedIn= require("../../middlewares/isLoggedIn");
 const isAccountVerified = require("../../middlewares/isAccountVerified");
 const postsRouter= express.Router();
@@ -35,6 +35,10 @@ postsRouter.put("/claps/:postId", isLoggedIn,  clapPost);
 
 // Scheduled a post
 postsRouter.put("/schedule/:postId", isLoggedIn,  schedulePost);
+
+// post view count
+postsRouter.put("/:postId/post-view-count", isLoggedIn,  postViewCount);
+
 
 
 module.exports = postsRouter;

@@ -107,7 +107,8 @@ resp.send("done");
 
     const postId= req.params.id
     // fetch the post corresponding to this id
-   const post = await Post.findById(postId).populate("author").populate("category");
+   const post = await Post.findById(postId).populate("author")
+   .populate("category").populate("comments");
     if(post){
     resp.json({
       status: "success",
@@ -130,9 +131,7 @@ resp.send("done");
   //@access public
 
   exports.getPublicPost = asyncHandler(async(req, resp)=>{
-    
-
-    const posts = await Post.find({}).sort({createdAt:-1}).limit(4).populate("category");
+     const posts = await Post.find({}).sort({createdAt:-1}).limit(4).populate("category");
    resp.status(201).json({
     status:"success",
     message:"4 posts successfully created",
@@ -372,3 +371,38 @@ const updatedPost= await Post.findByIdAndUpdate(postId, {
        });
 });
 
+// @desc post view count
+// @ PUT /api/v1/post/:id/post-view-count
+// @access private
+
+exports.postViewCount= asyncHandler(async(req,resp,next)=>{
+    // get the id of the post
+    const {postId} = req.params;
+    // get the current user
+    const currentUserId= req.userAuth._id;
+    // search the post
+    const post= await Post.findById(postId);
+    if(!post){
+      let error = new Error("Post not found");
+      next(error);
+      return;
+    }
+    // add the currentUserId to likes array
+    await Post.findByIdAndUpdate(postId,{$addToSet:{postViews:currentUserId}},
+      {new:true});
+    
+    // remove the currentUserId to dislikes array
+    post.dislikes= post.dislikes.filter(
+      (userId)=> userId.toString() !== currentUserId.toString()
+
+    );
+    // resvae the post
+  await post.save();
+
+     //  send the response
+    resp.json({
+      status: "success",
+      message :" posts viewed successfully",
+      post: updatedPost,
+       });
+});
