@@ -56,7 +56,7 @@ export const createCommentAction = createAsyncThunk("comments/create",
     builder.addCase(createCommentAction.fulfilled, (state,action)=>{
         console.log("create comment fulfilled run")
         state.loading = false;
-        // state.success = true,
+        state.success = true,
         state.error=null;
         state.posts= action.payload;
     });

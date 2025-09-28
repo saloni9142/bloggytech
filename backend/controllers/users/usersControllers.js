@@ -34,11 +34,7 @@ exports.register=asyncHandler(async(req,resp, next)=>{
 
         });
     });
-
-
-
-
-    // }catch(error){
+ // }catch(error){
     //    next(error);// go to global handler
          
     // }
@@ -75,13 +71,10 @@ exports.login= asyncHandler(async(req, resp,next)=>{
 
         //  resp.json({status: "failed", message:error?.message});
         //  optional chaining
-
-
-    
 });
 
 //@desc profile view
-//@route Get/api/v1/users/login
+//@route Get/api/v1/users/profile/:id
 //@ aceess private
 exports.getProfile=asyncHandler(async(req,resp,next)=>{
     console.log("Rec:", req.userAuth);
@@ -94,7 +87,26 @@ exports.getProfile=asyncHandler(async(req,resp,next)=>{
         .populate({path: "followers",model:"User"})
         .populate({path:"blockedUsers", model:"User"})
         .populate({path:"profileviewrs",model:"User"});
-        resp.json({status:"success", message:"Profile fetched",user,
+        resp.json({
+            status:"success", 
+            message:"Profile fetched",
+            user,
+
+        });
+});
+
+
+//@desc profile view
+//@route Get/api/v1/users/public-profile/:userId
+//@ aceess Public
+exports.getPublicProfile=asyncHandler(async(req,resp,next)=>{
+    // console.log("Rec:", req.userAuth);
+         const userId=req.params.userId;
+     const user= await User.findById(userId)
+     resp.json({
+            status:"success",
+             message:"Public Profile fetched",
+             user,
 
         });
 });

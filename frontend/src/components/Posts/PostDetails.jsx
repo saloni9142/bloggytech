@@ -58,10 +58,10 @@ const deletePostHandler =()=>{
            {post?.post?.category?.name}
           </div>
           <div className="flex items-center justify-center">
-            <p className="inline-block font-medium text-green-500">oe {post?.post?.author?.username}</p>
+            <p className="inline-block font-medium text-green-500"> {post?.post?.author?.username}</p>
             <span className="mx-1 text-green-500">•</span>
             <p className="inline-block font-medium text-green-500">
-              19 Jan 2022 19 Jan 
+              {new Date(post?.post?.createdAt).toString()}
             </p>
           </div>
           {/* <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tighter md:text-5xl text-darkCoolGray-900">
@@ -70,7 +70,9 @@ const deletePostHandler =()=>{
           <p className="mb-10 text-lg font-medium md:text-xl text-coolGray-500">
           {post?.post?.content}
           </p>
-          <div className="flex items-center justify-center -mx-2 text-left">
+          <Link 
+          to={`/user-public-profile/${post?.post?.author?._id}`}
+          className="flex items-center justify-center -mx-2 text-left">
             <div className="w-auto px-2">
               <img
                 className="w-12 h-12 rounded-full"
@@ -86,7 +88,7 @@ const deletePostHandler =()=>{
                 12 October 2021
               </p> */}
             </div>
-          </div>
+          </Link>
         </div>
       </div>
       <img

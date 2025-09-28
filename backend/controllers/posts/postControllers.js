@@ -107,8 +107,18 @@ resp.send("done");
 
     const postId= req.params.id
     // fetch the post corresponding to this id
-   const post = await Post.findById(postId).populate("author")
-   .populate("category").populate("comments");
+   const post = await Post.findById(postId)
+   .populate("author")
+   .populate("category")
+   .populate({
+    path: "comments",
+    model: "Comment",
+    populate:{
+      path: "author",
+      select: "username",
+    }
+
+   });
     if(post){
     resp.json({
       status: "success",
@@ -388,21 +398,19 @@ exports.postViewCount= asyncHandler(async(req,resp,next)=>{
       return;
     }
     // add the currentUserId to likes array
-    await Post.findByIdAndUpdate(postId,{$addToSet:{postViews:currentUserId}},
-      {new:true});
+    await Post.findByIdAndUpdate(postId,
+      {$addToSet:{postViews:currentUserId}},
+      {new:true}
+    ).populate("author")
+;
     
-    // remove the currentUserId to dislikes array
-    post.dislikes= post.dislikes.filter(
-      (userId)=> userId.toString() !== currentUserId.toString()
-
-    );
+  
     // resvae the post
-  await post.save();
-
+const updatedPost=  await post.save()
      //  send the response
     resp.json({
       status: "success",
-      message :" posts viewed successfully",
+      message :" Post viewed successfully",
       post: updatedPost,
        });
 });

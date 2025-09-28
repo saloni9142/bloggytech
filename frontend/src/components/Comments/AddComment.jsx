@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommentsList from "./CommentLists";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createCommentAction } from "../../redux/slices/comments/commentSlice";
 
 const AddComment = ({ postId, comments }) => {
@@ -13,6 +13,13 @@ const AddComment = ({ postId, comments }) => {
 	   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+ const {success}= useSelector((state)=>state?.comments);
+ useEffect(()=>{
+	if(success){
+		window.location.reload();
+		
+	}
+ })
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		dispatch(createCommentAction({...formData, postId}));
